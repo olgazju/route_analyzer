@@ -9,6 +9,9 @@ markers = [];
 route_lines = [];
 user_line = null;
 
+timeout_ids = [];
+var timer_is_on = 0;
+
 function initMap() {
     var chicago = new google.maps.LatLng(41.850, -87.650);
 
@@ -23,12 +26,7 @@ function initMap() {
 
     	// Clear all markers and line after second click
     	if (markers.length > 1) {
-    		markers.forEach(function(marker) {
-    			marker.setMap(null);
-    		});
-    		markers = [];
-    		user_line.setMap(null);
-
+    		clearMarkersIfExist()
     	}
 
         var marker = new google.maps.Marker({
@@ -47,7 +45,7 @@ function initMap() {
                 { lat: markers[markers.length - 1].position.lat(), lng: markers[markers.length - 1].position.lng() }
             ];
 
-            console.log("lineCoordinates", lineCoordinates);
+            console.log("lineCoordinates", JSON.stringify(lineCoordinates));
 
             user_line = new google.maps.Polyline({
                 path: lineCoordinates,
@@ -58,19 +56,75 @@ function initMap() {
             });
 
             user_line.setMap(map);
+
+            // send user_line coordinates for intersection checking
+            $.post(ROUTES_URL + "/intersections/", JSON.stringify(lineCoordinates), function(data, status) {
+                
+                console.log(data.routes)
+                for (var id in data.routes){
+                    console.log(data.routes[id]);
+                    
+                    
+                }
+                //coordinates = [];
+                //for(var i = 1; i < data.length - 1; i++) {
+                //    coordinates.push({lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)});
+                //}
+
+                //drawRoute(coordinates);
+            }, dataType="json");
         }
 
     });
 
-    //loadRoute(map, 'travel_log_2', drawRoute);
     loadRoutes();
 }
 
+function clearRoutesIfExist(){
+
+    // Clear all drawn routes
+    if (route_lines.length) {
+        for(var i = 0; i < route_lines.length; i++) {
+            route_lines[i].setMap(null);
+        }
+        route_lines=[];
+        stopTimeoutIfExist();
+    }
+}
+
+function clearMarkersIfExist(){
+
+    // Clear all markers and line 
+    if (markers.length) {
+        markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
+        markers = [];
+        user_line.setMap(null);
+
+    }
+}
+
+function stopTimeoutIfExist(){
+    timeout_ids.forEach(function(timeout_id) {
+        clearTimeout(timeout_id);
+    });
+    timeout_ids = [];
+}
 
 function switchDrawMode() {
 	if (drawingLine) {
-		markers = [];
+        // Clear user markers and line
+		clearMarkersIfExist();
+        $( "#routes_checkbox" ).show();
 	}
+    else{
+
+        // Clear all drawn routes
+        clearRoutesIfExist();
+        $( "#routes_checkbox" ).hide();
+
+    }
 
 	drawingLine = !drawingLine;
 }
@@ -78,6 +132,7 @@ function switchDrawMode() {
 function loadRoutes() {
     $.get(ROUTES_URL + "/routes", function(routes) {
         html = "";
+
         for(var idx in routes) {
             html += "<option value=" + routes[idx].id + ">" +routes[idx].name + "</option>"
         }
@@ -94,47 +149,47 @@ function selectRoute() {
 }
 
 function loadRoute(route_id) {
-	route_path = ROUTES_URL + "/locations?route_id=" + route_id;
-	$.get(route_path, function(data) {
-		coordinates = [];
+	$.get(ROUTES_URL + "/locations?route_id=" + route_id, function(data) {
+		route_points = [];
 		for(var i = 1; i < data.length - 1; i++) {
-			coordinates.push({lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)});
+			route_points.push({lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)});
 		}
 
-		drawRoute(coordinates);
+		drawRoute(route_points);
 	});
 }
 
-function drawRoute(route) {
 
-    map.setCenter(route[0]);
+function drawLineWithTimeout(lineCoordinates, timeout) {
+    timeout_ids.push(setTimeout(function() {
+        var route_line = new google.maps.Polyline({
+                        path: lineCoordinates,
+                        geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                    });
+        route_line.setMap(map);
+        route_lines.push(route_line);
+    }, timeout));
+  }
+
+function drawRoute(route_points) {
+
+    map.setCenter(route_points[0]);
     map.setZoom(15);
 
-    if (route_lines) {
-        for(var i = 0; i < route_lines.length; i++) {
-            route_lines[i].setMap(null);
+    clearRoutesIfExist();
+
+    for (var i = 1; i <= route_points.length - 1; i++) {
+        var lineCoordinates = [route_points[i - 1], route_points[i]];
+
+        drawLineWithTimeout(lineCoordinates, i * 10);
+        if (drawingLine){
+            console.log("return")
+            return;
         }
     }
-
-    for (var i = 1; i <= route.length - 1; i++) {
-        (function(i) {
-            setTimeout(function() {
-                var lineCoordinates = [route[i - 1], route[i]];
-                var route_line = new google.maps.Polyline({
-                    path: lineCoordinates,
-                    geodesic: true,
-                    strokeColor: '#FF0000',
-                    strokeOpacity: 1.0,
-                    strokeWeight: 2
-                });
-
-                route_line.setMap(map);
-                route_lines.push(route_line);
-
-            }, 10 * i);
-        }(i));
-    }
-
 }
 
 
