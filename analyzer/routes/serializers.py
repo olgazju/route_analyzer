@@ -1,4 +1,4 @@
-from models import Route, Location
+from .models import Route, Location
 from rest_framework import serializers
 
 

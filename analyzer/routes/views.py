@@ -1,6 +1,6 @@
-from models import Route, Location
+from .models import Route, Location
 from rest_framework import viewsets
-from serializers import RouteSerializer, LocationSerializer
+from .serializers import RouteSerializer, LocationSerializer
 
 
 class RouteViewSet(viewsets.ModelViewSet):
