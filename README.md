@@ -23,4 +23,6 @@ virtualenv YOUR_ENVIROMENT
 
  5. Install requirements
  
+`cd route_analyzer`
+
 `pip install -r requirements.txt`
