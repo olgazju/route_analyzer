@@ -26,3 +26,11 @@ virtualenv YOUR_ENVIROMENT
 `cd route_analyzer`
 
 `pip install -r requirements.txt`
+
+6. Run server
+
+`cd route_analyzer\analyzer`
+
+`python manage.py runserver`
+
+7. Open http://127.0.0.1:8000/
