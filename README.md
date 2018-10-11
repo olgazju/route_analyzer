@@ -10,7 +10,7 @@ pip install virtualenv
 cd YOUR_FOLDER_FOR_ENVIROMENTS
 virtualenv -p PATH_TO_PYTHON2.7_EXE YOUR_ENVIROMENT
 
-cd C:\virtualenv 
+cd C:\virtualenv
 virtualenv -p C:\Python27\python2.exe routes
 
 4. Activate enviroment
