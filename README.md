@@ -25,4 +25,4 @@ virtualenv YOUR_ENVIROMENT
  
 `cd route_analyzer`
 
-`pip install -r requirement.txt`
+`pip install -r requirements.txt`
