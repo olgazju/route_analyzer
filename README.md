@@ -1,7 +1,5 @@
 # Assigment - Navigation routes analyzer application
 
-Application
-
 Create a client interface for your application.
 
 The client has to include a map, for this you can use a map provider of your choice.
