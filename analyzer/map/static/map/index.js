@@ -131,16 +131,13 @@ function switchDrawMode() {
 
 function loadRoutes() {
     $.get(ROUTES_URL + "/routes", function(routes) {
-        html = "";
+        html = "<option value=0>Select Route</option>";
 
         for(var idx in routes) {
             html += "<option value=" + routes[idx].id + ">" +routes[idx].name + "</option>"
         }
         document.getElementById("routes").innerHTML = html;
     });
-
-    // Draw first route in the loaded list
-   // loadRoute(1);
 }
 
 function selectRoute() {
