@@ -24,7 +24,7 @@ function initMap() {
     	if (!drawingLine)
     		return;
 
-    	// Clear all markers and line after second click
+    	// Clear all markers and routes from map after second click
     	if (markers.length > 1) {
     		clearMarkersIfExist();
              clearRoutesIfExist();
@@ -61,11 +61,10 @@ function initMap() {
             // send user_line coordinates for intersection checking
             $.post(ROUTES_URL + "/intersections/", JSON.stringify(lineCoordinates), function(data, status) {
                 
-                console.log(data.routes)
                 for (var id in data.routes){
-                    console.log(data.routes[id]);
-                    loadRoute(data.routes[id], is_timeout_needed=false);
-                    
+                    // draw all routes that intersect user line
+                    // TODO: make it async
+                    loadRoute(data.routes[id], is_timeout_needed=false);    
                 }
             }, dataType="json");
         }
