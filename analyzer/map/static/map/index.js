@@ -1,4 +1,5 @@
 
+ROUTES_URL = "http://127.0.0.1:8000/routes"
 
 // Flag indicating drawing line mode
 drawingLine = false;
@@ -71,7 +72,7 @@ function switchDrawMode() {
 }
 
 function loadRoutes() {
-    $.get("http://127.0.0.1:8000/routes/routes", function(routes) {
+    $.get(ROUTES_URL + "/routes", function(routes) {
         html = "";
         for(var idx in routes) {
             html += "<option value=" + routes[idx].id + ">" +routes[idx].name + "</option>"
@@ -89,7 +90,7 @@ function selectRoute() {
 }
 
 function loadRoute(route_id) {
-	route_path = "http://127.0.0.1:8000/routes/locations?route_id=" + route_id;
+	route_path = ROUTES_URL + "/locations?route_id=" + route_id;
 	$.get(route_path, function(data) {
 		coordinates = [];
 		for(var i = 1; i < data.length - 1; i++) {
