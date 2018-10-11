@@ -31,4 +31,4 @@ def intersection(request):
     if request.method == 'POST':
         print("post", request.POST)
         queryset = Location.objects.all()
-        return JsonResponse({'routes':[1]})
+        return JsonResponse({'routes':[1, 2]})

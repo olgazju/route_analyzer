@@ -26,7 +26,8 @@ function initMap() {
 
     	// Clear all markers and line after second click
     	if (markers.length > 1) {
-    		clearMarkersIfExist()
+    		clearMarkersIfExist();
+             clearRoutesIfExist();
     	}
 
         var marker = new google.maps.Marker({
@@ -63,15 +64,9 @@ function initMap() {
                 console.log(data.routes)
                 for (var id in data.routes){
                     console.log(data.routes[id]);
-                    
+                    loadRoute(data.routes[id], is_timeout_needed=false);
                     
                 }
-                //coordinates = [];
-                //for(var i = 1; i < data.length - 1; i++) {
-                //    coordinates.push({lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)});
-                //}
-
-                //drawRoute(coordinates);
             }, dataType="json");
         }
 
@@ -116,6 +111,7 @@ function switchDrawMode() {
 	if (drawingLine) {
         // Clear user markers and line
 		clearMarkersIfExist();
+        clearRoutesIfExist();
         $( "#routes_checkbox" ).show();
 	}
     else{
@@ -131,7 +127,7 @@ function switchDrawMode() {
 
 function loadRoutes() {
     $.get(ROUTES_URL + "/routes", function(routes) {
-        html = "<option value=0>Select Route</option>";
+        html = "<option value=0>No Routes</option>";
 
         for(var idx in routes) {
             html += "<option value=" + routes[idx].id + ">" +routes[idx].name + "</option>"
@@ -142,17 +138,17 @@ function loadRoutes() {
 
 function selectRoute() {
     var route_id = document.getElementById("routes").value;
-    loadRoute(route_id)
+    loadRoute(route_id, is_timeout_needed=true);
 }
 
-function loadRoute(route_id) {
+function loadRoute(route_id, is_timeout_needed) {
 	$.get(ROUTES_URL + "/locations?route_id=" + route_id, function(data) {
 		route_points = [];
 		for(var i = 1; i < data.length - 1; i++) {
 			route_points.push({lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)});
 		}
 
-		drawRoute(route_points);
+		drawRoute(route_points, is_timeout_needed);
 	});
 }
 
@@ -169,22 +165,38 @@ function drawLineWithTimeout(lineCoordinates, timeout) {
         route_line.setMap(map);
         route_lines.push(route_line);
     }, timeout));
-  }
+}
 
-function drawRoute(route_points) {
+function drawLine(lineCoordinates) {
 
-    map.setCenter(route_points[0]);
-    map.setZoom(15);
+    var route_line = new google.maps.Polyline({
+                    path: lineCoordinates,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                });
+    route_line.setMap(map);
+    route_lines.push(route_line);
 
-    clearRoutesIfExist();
+}  
+
+function drawRoute(route_points, is_timeout_needed) {
+
+    if(is_timeout_needed){
+        map.setCenter(route_points[0]);
+        map.setZoom(15);
+        clearRoutesIfExist();
+    }
 
     for (var i = 1; i <= route_points.length - 1; i++) {
         var lineCoordinates = [route_points[i - 1], route_points[i]];
-
-        drawLineWithTimeout(lineCoordinates, i * 10);
-        if (drawingLine){
-            console.log("return")
-            return;
+        if(is_timeout_needed){
+            drawLineWithTimeout(lineCoordinates, i * 10);
+        }
+        else
+        {
+            drawLine(lineCoordinates)
         }
     }
 }
