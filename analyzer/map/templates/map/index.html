@@ -1,0 +1,44 @@
+{% load static %}
+
+<html>
+<header>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'map/index.css' %}" />
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+</header>
+
+<body>
+    <div id="header">
+        <div class="title">Route Analyzer</div>
+        <div class="actions">
+            <label class="switch">
+                <input type="checkbox" onclick="switchDrawMode()">
+                <span class="slider round"></span>
+            </label>
+            <span class="mode_label">Draw Mode</span>
+        </div>
+        <div class="actions">
+            <select name="routes" id="routes" onchange="selectRoute()"></select>
+        </div>
+    </div>
+    <div id="map"></div>
+    <script src="{% static 'map/index.js' %}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjZJorWDLqP3PFA7RzqAp1jQJlbRv4QU0&callback=initMap" async defer></script>
+</body>
+
+</html>
