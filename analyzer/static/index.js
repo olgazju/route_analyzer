@@ -82,7 +82,7 @@ function loadRoutes() {
     });
 
     // Draw first route in the loaded list
-    loadRoute(1);
+   // loadRoute(1);
 }
 
 function selectRoute() {
@@ -106,7 +106,7 @@ function loadRoute(route_id) {
 function drawRoute(route) {
 
     map.setCenter(route[0]);
-    map.setZoom(16);
+    map.setZoom(15);
 
     if (route_lines) {
         for(var i = 0; i < route_lines.length; i++) {

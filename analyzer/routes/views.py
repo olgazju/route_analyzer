@@ -19,8 +19,8 @@ class LocationViewSet(viewsets.ModelViewSet):
     serializer_class = LocationSerializer
 
     def get_queryset(self):
-	    route_id = self.request.query_params.get('route_id')
-	    
-	    queryset = Location.objects.filter(route_id=route_id)
+        route_id = self.request.query_params.get('route_id')
+        
+        queryset = Location.objects.filter(route_id=route_id).exclude(speed=0).order_by("timestamp")
 
-	    return queryset
+        return queryset

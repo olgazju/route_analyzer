@@ -20,14 +20,10 @@ class Command(BaseCommand):
                 route_files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
 
                 for route_file in route_files:
-                    print route_file
-
                     rf = Route(name=route_file)
                     rf.save()
 
                     route_df = pd.read_csv(os.path.join(folder,route_file))
-
-                    print route_df.columns
 
                     route_df.columns = ['timestamp', 'longitude', 'latitude', 'accuracy','speed']
                     route_df['route_id'] = rf.id;
@@ -36,7 +32,6 @@ class Command(BaseCommand):
                     route_df.to_sql('routes_location', conn, if_exists='append', index=False)
 
                     route_df
-                    print route_df
 
             except Exception as e:
                 raise CommandError('Error importing data', e)
