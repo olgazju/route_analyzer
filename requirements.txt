@@ -1,4 +1,5 @@
 Django==1.11
+django-unixtimestampfield==0.3.9
 djangorestframework==3.8.2
 numpy==1.15.2
 pandas==0.23.4

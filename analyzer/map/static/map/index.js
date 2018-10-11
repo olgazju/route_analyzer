@@ -39,11 +39,15 @@ function initMap() {
 
         markers.push(marker);
 
+        // draw user line between 2 markers
         if (markers.length > 1) {
+
             var lineCoordinates = [
                 { lat: markers[markers.length - 2].position.lat(), lng: markers[markers.length - 2].position.lng() },
                 { lat: markers[markers.length - 1].position.lat(), lng: markers[markers.length - 1].position.lng() }
             ];
+
+            console.log("lineCoordinates", lineCoordinates);
 
             user_line = new google.maps.Polyline({
                 path: lineCoordinates,
@@ -126,6 +130,7 @@ function drawRoute(route) {
 
                 route_line.setMap(map);
                 route_lines.push(route_line);
+
             }, 10 * i);
         }(i));
     }
