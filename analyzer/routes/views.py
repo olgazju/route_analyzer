@@ -21,6 +21,6 @@ class LocationViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         route_id = self.request.query_params.get('route_id')
         
-        queryset = Location.objects.filter(route_id=route_id).exclude(speed=0).order_by("timestamp")
+        queryset = Location.objects.filter(route_id=route_id).order_by("timestamp")
 
         return queryset

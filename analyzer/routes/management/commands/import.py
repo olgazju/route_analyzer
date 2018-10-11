@@ -25,9 +25,12 @@ class Command(BaseCommand):
 
                     route_df = pd.read_csv(os.path.join(folder,route_file))
 
+                    # standardize the table columns
                     route_df.columns = ['timestamp', 'longitude', 'latitude', 'accuracy','speed']
                     route_df['route_id'] = rf.id;
 
+                    # clean data from speed 0.0 and -1.0 
+                    route_df = route_df[route_df["speed"]>0]
 
                     route_df.to_sql('routes_location', conn, if_exists='append', index=False)
 

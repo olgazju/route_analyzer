@@ -72,10 +72,8 @@ function switchDrawMode() {
 
 function loadRoutes() {
     $.get("http://127.0.0.1:8000/routes/routes", function(routes) {
-        console.log(routes);
         html = "";
         for(var idx in routes) {
-            console.log("Route", routes[idx])
             html += "<option value=" + routes[idx].id + ">" +routes[idx].name + "</option>"
         }
         document.getElementById("routes").innerHTML = html;
@@ -91,7 +89,6 @@ function selectRoute() {
 }
 
 function loadRoute(route_id) {
-    console.log(route_id);
 	route_path = "http://127.0.0.1:8000/routes/locations?route_id=" + route_id;
 	$.get(route_path, function(data) {
 		coordinates = [];

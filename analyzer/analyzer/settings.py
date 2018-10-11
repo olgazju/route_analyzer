@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'routes',
+    'map'
 ]
 
 MIDDLEWARE = [
@@ -125,5 +126,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
 
 USF_FORMAT='usf_timestamp'
