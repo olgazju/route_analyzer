@@ -30,9 +30,8 @@ Make sure that C:\Program Files (x86)\Python36-32; and C:\Program Files (x86)\Py
 
  3. Create enviroment:
  
-cd YOUR_FOLDER_FOR_ENVIROMENTS
 
-virtualenv YOUR_ENVIROMENT
+`mkdir C:\virtualenv`
 
 `cd C:\virtualenv`
 
