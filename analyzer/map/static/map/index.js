@@ -10,13 +10,14 @@ route_lines = [];
 user_line = null;
 
 timeout_ids = [];
-var timer_is_on = 0;
 
 function initMap() {
     var centerMap = new google.maps.LatLng(32.0759398737466, 34.7730261824675);
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: centerMap,
+        zoomControl: false,
+        mapTypeControl: false,
         zoom: 15
     });
 
@@ -49,7 +50,7 @@ function initMap() {
             user_line = new google.maps.Polyline({
                 path: lineCoordinates,
                 geodesic: true,
-                strokeColor: '#00FF00',
+                strokeColor: '#000000',
                 strokeOpacity: 1.0,
                 strokeWeight: 2
             });
@@ -163,12 +164,12 @@ function drawLineWithTimeout(lineCoordinates, timeout) {
     }, timeout));
 }
 
-function drawLine(lineCoordinates) {
+function drawLine(lineCoordinates, color) {
 
     var route_line = new google.maps.Polyline({
                     path: lineCoordinates,
                     geodesic: true,
-                    strokeColor: '#FF0000',
+                    strokeColor: color,
                     strokeOpacity: 1.0,
                     strokeWeight: 2
                 });
@@ -176,6 +177,15 @@ function drawLine(lineCoordinates) {
     route_lines.push(route_line);
 
 }  
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 
 function drawRoute(route_points, is_timeout_needed) {
 
@@ -185,6 +195,8 @@ function drawRoute(route_points, is_timeout_needed) {
         clearRoutesIfExist();
     }
 
+    color = getRandomColor()
+
     for (var i = 1; i <= route_points.length - 1; i++) {
         var lineCoordinates = [route_points[i - 1], route_points[i]];
         if(is_timeout_needed){
@@ -192,7 +204,7 @@ function drawRoute(route_points, is_timeout_needed) {
         }
         else
         {
-            drawLine(lineCoordinates)
+            drawLine(lineCoordinates, color)
         }
     }
 }

@@ -1,5 +1,6 @@
 html, body {
 	font-family: Verdana;
+
 }
 
 #header {
@@ -11,16 +12,13 @@ html, body {
     top: 0;
     left: 0;
     z-index: 10000;
-    background-color: white;
+    background-color: #17131587;
+    color: white;
 }
-
-#map {
-    top: 60px;
-}
-
 
 .actions {
     float:left;
+    margin-top: 5px;
 }
 
 .title {
@@ -96,4 +94,9 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+select {
+  height: 30px;
+  border-radius: 15px;
 }
