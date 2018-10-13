@@ -43,16 +43,28 @@ Make sure that C:\Program Files (x86)\Python36-32; and C:\Program Files (x86)\Py
 
 `activate`
 
- 5. Install requirements
+ 5. Clone repository
+ 
+ `cd C:\`
+
+ `git clone https://github.com/olgazju/route_analyzer.git`
+
+ 6. Install requirements
  
 `cd route_analyzer`
 
 `pip install -r requirements.txt`
 
-6. Run server
+7. Run server
 
 `cd route_analyzer\analyzer`
 
 `python manage.py runserver`
 
-7. Open http://127.0.0.1:8000/
+8. Open http://127.0.0.1:8000/
+
+## How to run tests:
+
+`cd route_analyzer\analyzer`
+
+`python manage.py test routes`
