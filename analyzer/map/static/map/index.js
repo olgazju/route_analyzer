@@ -46,8 +46,6 @@ function initMap() {
                 { lat: markers[markers.length - 1].position.lat(), lng: markers[markers.length - 1].position.lng() }
             ];
 
-            console.log("lineCoordinates", JSON.stringify(lineCoordinates));
-
             user_line = new google.maps.Polyline({
                 path: lineCoordinates,
                 geodesic: true,
@@ -110,7 +108,6 @@ function switchDrawMode() {
 	if (drawingLine) {
         // Clear user markers and line
 		clearMarkersIfExist();
-        clearRoutesIfExist();
         $( "#routes_checkbox" ).show();
 	}
     else{
@@ -120,6 +117,8 @@ function switchDrawMode() {
         $( "#routes_checkbox" ).hide();
 
     }
+
+    clearRoutesIfExist();
 
 	drawingLine = !drawingLine;
 }
@@ -146,7 +145,6 @@ function loadRoute(route_id, is_timeout_needed) {
 		for(var i = 1; i < data.length - 1; i++) {
 			route_points.push({lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)});
 		}
-
 		drawRoute(route_points, is_timeout_needed);
 	});
 }

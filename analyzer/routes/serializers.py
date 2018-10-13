@@ -1,5 +1,5 @@
-from .models import Route, Location
 from rest_framework import serializers
+from .models import Route, Location
 
 
 class RouteSerializer(serializers.ModelSerializer):
@@ -11,4 +11,4 @@ class RouteSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ('id', 'timestamp', 'longitude', 'latitude', 'accuracy', 'speed', 'route_id')
+        fields = ('longitude', 'latitude')
