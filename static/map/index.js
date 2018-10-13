@@ -24,10 +24,11 @@ function initMap() {
     	if (!drawingLine)
     		return;
 
+        console.log("Markers", markers.length);
     	// Clear all markers and routes from map after second click
     	if (markers.length > 1) {
     		clearMarkersIfExist();
-            clearRoutesIfExist();
+             clearRoutesIfExist();
     	}
 
         var marker = new google.maps.Marker({
@@ -61,6 +62,7 @@ function initMap() {
                 
                 for (var id in data.routes){
                     // draw all routes that intersect user line
+                    // TODO: make it async
                     loadRoute(data.routes[id], is_timeout_needed=false);    
                 }
             }, dataType="json");
@@ -195,4 +197,22 @@ function drawRoute(route_points, is_timeout_needed) {
             drawLine(lineCoordinates)
         }
     }
+}
+
+
+var TILE_SIZE = 256;
+
+
+// The mapping between latitude, longitude and pixels is defined by the web
+// mercator projection.
+function project(latLng) {
+    var siny = Math.sin(latLng.lat() * Math.PI / 180);
+
+    // Truncating to 0.9999 effectively limits latitude to 89.189. This is
+    // about a third of a tile past the edge of the world tile.
+    siny = Math.min(Math.max(siny, -0.9999), 0.9999);
+
+    return new google.maps.Point(
+        TILE_SIZE * (0.5 + latLng.lng() / 360),
+        TILE_SIZE * (0.5 - Math.log((1 + siny) / (1 - siny)) / (4 * Math.PI)));
 }

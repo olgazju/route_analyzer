@@ -1,0 +1,39 @@
+<div id="header">
+  <div class="title">Route Analyzer</div>
+  <div class="actions">
+    <label class="switch">
+      <input type="checkbox" (click)="onSwitchDrawMode()">
+      <span class="slider round"></span>
+    </label>
+    <span class="mode_label">&nbsp;&nbsp;Draw Mode</span>
+  </div>
+  <div class="actions" id="routes_checkbox" *ngIf="!drawingMode">
+    <select [(ngModel)]="selectedRouteId" required (change)="onRouteSelected($event.target.value)">
+      <option hidden [value]="undefined" disabled selected>Select route
+      <option *ngFor="let r of routeNames" [ngValue]="r.id">{{r.name}}
+    </select>
+  </div>
+</div>
+
+<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapClick)="onMapClick($event)">
+  <agm-marker 
+      *ngFor="let m of markers; let i = index"
+      [latitude]="m.lat"
+      [longitude]="m.lng">
+  </agm-marker>
+  <agm-polyline>
+    <agm-polyline-point 
+      *ngFor="let m of markers; let i = index"
+      [latitude]="m.lat"
+      [longitude]="m.lng">
+    </agm-polyline-point>
+  </agm-polyline>
+  <agm-polyline [strokeColor]="getColor(c)" *ngFor="let route of routes; let c = index">
+    <agm-polyline-point 
+      *ngFor="let p of route; let i = index"
+      [latitude]="p.latitude"
+      [longitude]="p.longitude">
+    </agm-polyline-point>
+  </agm-polyline>
+</agm-map>
+
