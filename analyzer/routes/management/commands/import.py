@@ -7,6 +7,10 @@ import pandas as pd
 
 
 class Command(BaseCommand):
+    """
+    Class Command for auto-importing of all CSV GEO-files from some folder to database
+    Using in command line: python manage.py import YOUR_PATH_TO_CVS
+    """
     help = 'Imports all CSV formatted route files in folder into database'
 
     def add_arguments(self, parser):
@@ -23,15 +27,15 @@ class Command(BaseCommand):
                     rf = Route(name=route_file)
                     rf.save()
 
-                    route_df = pd.read_csv(os.path.join(folder,route_file))
+                    route_df = pd.read_csv(os.path.join(folder, route_file))
 
                     # standardize the table columns
-                    route_df.columns = ['timestamp', 'longitude', 'latitude', 'accuracy','speed']
-                    route_df['route_id'] = rf.id;
+                    route_df.columns = ['timestamp', 'longitude', 'latitude', 'accuracy', 'speed']
+                    route_df['route_id'] = rf.id
 
                     # clean data from speed 0.0 and -1.0 and accuracy more then 200 meters
                     # !!! part of data came with timestamp in milliseconds, part in seconds !!!
-                    route_df = route_df[(route_df["speed"]>0) & (route_df["accuracy"]<=200)]
+                    route_df = route_df[(route_df["speed"] > 0) & (route_df["accuracy"] <= 200)]
 
                     route_df.to_sql('routes_location', conn, if_exists='append', index=False)
 

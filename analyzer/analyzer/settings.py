@@ -128,4 +128,4 @@ STATICFILES_DIRS = [
 ]
 
 
-USF_FORMAT='usf_timestamp'
+USF_FORMAT = 'usf_timestamp'
