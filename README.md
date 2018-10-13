@@ -20,7 +20,7 @@ route is not drawn at once). The points should be drawn chronologically in a del
 
 ● you can use a client framework of your choice
 
-## How to install enviroment on Windows:
+## How to set enviroment on Windows:
  1. Install [Python 3.6 version](https://www.python.org/downloads/release/python-360/). 
 Make sure that C:\Program Files (x86)\Python36-32; and C:\Program Files (x86)\Python36-32\Scripts; is part of your PATH.
 
@@ -61,10 +61,36 @@ Make sure that C:\Program Files (x86)\Python36-32; and C:\Program Files (x86)\Py
 
 `python manage.py runserver`
 
-8. Open http://127.0.0.1:8000/
+## How to run app (pure JS):
+
+Open http://127.0.0.1:8000/map
+
+## How to run app (Angular 6):
+
+Open http://127.0.0.1:8000/
 
 ## How to run tests:
 
 `cd route_analyzer\analyzer`
 
 `python manage.py test routes`
+
+## How to rebuild Angular app:
+
+1. Install [Node.js](https://nodejs.org/en/)
+
+2. Install Angular CLI
+
+`npm install -g @angular/cli`
+
+3. Make Builds
+
+`cd route_analyzer\analyzer\app`
+
+`npm install`
+
+`ng build`
+
+`cd route_analyzer\analyzer\`
+
+`python manage.py collectstatic`
