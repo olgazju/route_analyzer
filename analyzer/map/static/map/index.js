@@ -13,11 +13,11 @@ timeout_ids = [];
 var timer_is_on = 0;
 
 function initMap() {
-    var chicago = new google.maps.LatLng(41.850, -87.650);
+    var centerMap = new google.maps.LatLng(32.0759398737466, 34.7730261824675);
 
     map = new google.maps.Map(document.getElementById('map'), {
-        center: chicago,
-        zoom: 3
+        center: centerMap,
+        zoom: 15
     });
 
     map.addListener('click', function(event) {

@@ -29,8 +29,9 @@ class Command(BaseCommand):
                     route_df.columns = ['timestamp', 'longitude', 'latitude', 'accuracy','speed']
                     route_df['route_id'] = rf.id;
 
-                    # clean data from speed 0.0 and -1.0 
-                    route_df = route_df[route_df["speed"]>0]
+                    # clean data from speed 0.0 and -1.0 and accuracy more then 200 meters
+                    # !!! part of data came with timestamp in milliseconds, part in seconds !!!
+                    route_df = route_df[(route_df["speed"]>0) & (route_df["accuracy"]<=200)]
 
                     route_df.to_sql('routes_location', conn, if_exists='append', index=False)
 
