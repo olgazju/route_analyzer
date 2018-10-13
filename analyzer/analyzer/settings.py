@@ -124,8 +124,6 @@ USE_TZ = True
 
 ANGULAR_APP_DIR = os.path.join(BASE_DIR, 'app\\dist\\route-app')
 
-print ANGULAR_APP_DIR
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
