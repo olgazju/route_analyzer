@@ -1,15 +1,15 @@
 
-ROUTES_URL = "http://127.0.0.1:8000/routes"
+API_BASE = "http://127.0.0.1:8000/routes"
 
 // Flag indicating drawing line mode
-drawingLine = false;
+drawingMode = false;
 
 // Markers for drawing the line
 markers = [];
-route_lines = [];
-user_line = null;
+routeLines = [];
+userLine = null;
 
-timeout_ids = [];
+timeoutIDs = [];
 
 function initMap() {
     var centerMap = new google.maps.LatLng(32.0759398737466, 34.7730261824675);
@@ -22,7 +22,7 @@ function initMap() {
     });
 
     map.addListener('click', function(event) {
-    	if (!drawingLine)
+    	if (!drawingMode)
     		return;
 
     	// Clear all markers and routes from map after second click
@@ -47,7 +47,7 @@ function initMap() {
                 { lat: markers[markers.length - 1].position.lat(), lng: markers[markers.length - 1].position.lng() }
             ];
 
-            user_line = new google.maps.Polyline({
+            userLine = new google.maps.Polyline({
                 path: lineCoordinates,
                 geodesic: true,
                 strokeColor: '#000000',
@@ -55,14 +55,14 @@ function initMap() {
                 strokeWeight: 2
             });
 
-            user_line.setMap(map);
+            userLine.setMap(map);
 
-            // send user_line coordinates for intersection checking
-            $.post(ROUTES_URL + "/intersections/", JSON.stringify(lineCoordinates), function(data, status) {
+            // send userLine coordinates for intersection checking
+            $.post(API_BASE + "/intersections/", JSON.stringify(lineCoordinates), function(data, status) {
                 
                 for (var id in data.routes){
                     // draw all routes that intersect user line
-                    loadRoute(data.routes[id], is_timeout_needed=false);    
+                    loadRoute(data.routes[id], isTimeoutNeeded=false);    
                 }
             }, dataType="json");
         }
@@ -75,11 +75,11 @@ function initMap() {
 function clearRoutesIfExist(){
 
     // Clear all drawn routes
-    if (route_lines.length) {
-        for(var i = 0; i < route_lines.length; i++) {
-            route_lines[i].setMap(null);
+    if (routeLines.length) {
+        for(var i = 0; i < routeLines.length; i++) {
+            routeLines[i].setMap(null);
         }
-        route_lines=[];
+        routeLines=[];
         stopTimeoutIfExist();
     }
 }
@@ -92,20 +92,20 @@ function clearMarkersIfExist(){
             marker.setMap(null);
         });
         markers = [];
-        user_line.setMap(null);
+        userLine.setMap(null);
 
     }
 }
 
 function stopTimeoutIfExist(){
-    timeout_ids.forEach(function(timeout_id) {
+    timeoutIDs.forEach(function(timeout_id) {
         clearTimeout(timeout_id);
     });
-    timeout_ids = [];
+    timeoutIDs = [];
 }
 
 function switchDrawMode() {
-	if (drawingLine) {
+	if (drawingMode) {
         // Clear user markers and line
 		clearMarkersIfExist();
         $( "#routes_checkbox" ).show();
@@ -120,11 +120,11 @@ function switchDrawMode() {
 
     clearRoutesIfExist();
 
-	drawingLine = !drawingLine;
+	drawingMode = !drawingMode;
 }
 
 function loadRoutes() {
-    $.get(ROUTES_URL + "/routes", function(routes) {
+    $.get(API_BASE + "/routes", function(routes) {
         html = "<option value=0>No Routes</option>";
 
         for(var idx in routes) {
@@ -135,46 +135,46 @@ function loadRoutes() {
 }
 
 function selectRoute() {
-    var route_id = document.getElementById("routes").value;
-    loadRoute(route_id, is_timeout_needed=true);
+    var routeID = document.getElementById("routes").value;
+    loadRoute(routeID, isTimeoutNeeded=true);
 }
 
-function loadRoute(route_id, is_timeout_needed) {
-	$.get(ROUTES_URL + "/locations?route_id=" + route_id, function(data) {
-		route_points = [];
+function loadRoute(routeID, isTimeoutNeeded) {
+	$.get(API_BASE + "/locations?route_id=" + routeID, function(data) {
+		routePoints = [];
 		for(var i = 1; i < data.length - 1; i++) {
-			route_points.push({lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)});
+			routePoints.push({lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)});
 		}
-		drawRoute(route_points, is_timeout_needed);
+		drawRoute(routePoints, isTimeoutNeeded);
 	});
 }
 
 
 function drawLineWithTimeout(lineCoordinates, timeout) {
-    timeout_ids.push(setTimeout(function() {
-        var route_line = new google.maps.Polyline({
+    timeoutIDs.push(setTimeout(function() {
+        var routeLine = new google.maps.Polyline({
                         path: lineCoordinates,
                         geodesic: true,
                         strokeColor: '#FF0000',
                         strokeOpacity: 1.0,
                         strokeWeight: 2
                     });
-        route_line.setMap(map);
-        route_lines.push(route_line);
+        routeLine.setMap(map);
+        routeLines.push(routeLine);
     }, timeout));
 }
 
 function drawLine(lineCoordinates, color) {
 
-    var route_line = new google.maps.Polyline({
+    var routeLine = new google.maps.Polyline({
                     path: lineCoordinates,
                     geodesic: true,
                     strokeColor: color,
                     strokeOpacity: 1.0,
                     strokeWeight: 2
                 });
-    route_line.setMap(map);
-    route_lines.push(route_line);
+    routeLine.setMap(map);
+    routeLines.push(routeLine);
 
 }  
 
@@ -187,19 +187,19 @@ function getRandomColor() {
   return color;
 }
 
-function drawRoute(route_points, is_timeout_needed) {
+function drawRoute(routePoints, isTimeoutNeeded) {
 
-    if(is_timeout_needed){
-        map.setCenter(route_points[0]);
+    if(isTimeoutNeeded){
+        map.setCenter(routePoints[0]);
         map.setZoom(15);
         clearRoutesIfExist();
     }
 
     color = getRandomColor()
 
-    for (var i = 1; i <= route_points.length - 1; i++) {
-        var lineCoordinates = [route_points[i - 1], route_points[i]];
-        if(is_timeout_needed){
+    for (var i = 1; i <= routePoints.length - 1; i++) {
+        var lineCoordinates = [routePoints[i - 1], routePoints[i]];
+        if(isTimeoutNeeded){
             drawLineWithTimeout(lineCoordinates, i * 10);
         }
         else
